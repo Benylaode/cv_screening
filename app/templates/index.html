@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI ATS - Resume Matcher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>Resume Matcher System (Two-Stage AI)</h1>
+
+    <!-- UPLOAD RESUME -->
+    <div class="card">
+        <h2>1. Upload Resumes (Data Ingestion)</h2>
+        
+        <label><b>Option A:</b> Upload Single/Multiple Files</label><br>
+        <input type="file" id="resumeFilesOnly" accept="application/pdf" multiple><br><br>
+
+        <label><b>Option B:</b> Upload a Folder (Multiple PDFs)</label><br>
+        <input type="file" id="resumeFolder" webkitdirectory directory multiple accept="application/pdf"><br><br>
+        
+        <button onclick="uploadSelectedFiles()">Upload Files to Database</button>
+        <pre id="uploadStatus"></pre>
+    </div>
+
+    <!-- DAFTAR RESUME DI DATABASE -->
+    <div class="card">
+        <h2>2. Available Resumes in Database</h2>
+        <button onclick="loadResumes()">Load Resumes</button>
+        <ul id="resumeList"></ul>
+    </div>
+
+    <!-- TAHAP 1: RANKING MASSAL -->
+    <div class="card">
+        <h2>3. Tahap 1: Fast Screening (Rank All Candidates)</h2>
+        <p><small>Mencocokkan Job Description dengan SEMUA CV secara instan menggunakan Vector Search (FAISS).</small></p>
+
+        <label>Job ID (Bebas, misal: JOB-IT-01. Kosongkan untuk Auto-Generate):</label>
+        <input type="text" id="jobId" placeholder="Masukkan ID Pekerjaan...">
+
+        <label>Job Description:</label>
+        <textarea id="jobDesc" rows="5" placeholder="Ketik deskripsi dan syarat pekerjaan di sini..."></textarea>
+
+        <button onclick="rankCandidates()">Rank Candidates</button>
+        
+        <h3>Leaderboard:</h3>
+        <button onclick="loadLeaderboard()">Load Leaderboard (Job ID Saat Ini)</button>
+        <pre id="leaderboardBox">Hasil ranking / leaderboard akan muncul di sini...</pre>
+    </div>
+
+    <!-- TAHAP 2: DEEP SEEK TOP 20 -->
+    <div class="card">
+        <h2>4. Tahap 2: AI Deep Match (Top 5 Candidates)</h2>
+        <p><small>Sistem akan memanggil DeepSeek AI untuk membaca dan menganalisis secara detail <b>Maksimal 20 kandidat teratas</b> dari Leaderboard secara otomatis.</small></p>
+
+        <label>Job ID (Untuk mengambil Top 20 Kandidat):</label>
+        <input type="text" id="tahap2JobId" placeholder="Bisa dikosongkan jika lanjut dari Tahap 1 di atas...">
+
+        <button onclick="matchTopCandidates()">Generate AI Verdict for Top 20</button>
+        
+        <h3>Result / AI Analysis:</h3>
+        <pre id="result-box" style="max-height: 500px; overflow-y: auto;">Analisis AI untuk 20 kandidat akan muncul secara bertahap di sini...</pre>
+    </div>
+
+    <!-- EKSTRAK NAMA (OPTIONAL) -->
+    <div class="card">
+        <h2>Extra: Extract Name From Resume</h2>
+        <label>Resume ID:</label>
+        <input type="text" id="extractResumeId">
+        <button onclick="extractName()">Extract</button>
+        <pre id="extractResult">Name will appear here...</pre>
+    </div>
+
+    <!-- Script dipanggil di akhir body -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>

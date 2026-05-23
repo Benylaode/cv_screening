@@ -1,0 +1,17 @@
+services:
+  vllm-server:
+    build:
+      # Ubah baris ini agar menunjuk ke folder lokal hasil clone
+      context: ./vllm/vllm
+      dockerfile: docker/Dockerfile.cpu
+    container_name: vllm_cpu_local
+    ports:
+      - "8000:8000"
+    ipc: host
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: >
+      --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+      --host 0.0.0.0
+      --port 8000
+      --max-model-len 2048
